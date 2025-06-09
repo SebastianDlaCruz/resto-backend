@@ -2,9 +2,8 @@ import { Auth } from '@common/decorators';
 import { Rol } from '@common/enums';
 import { Controller, Delete, Patch, Post } from '@nestjs/common';
 
-@Controller('dish')
-export class DishController {
-
+@Controller('category')
+export class CategoryController {
 
   @Auth(Rol.ADMIN)
   @Post()
@@ -12,7 +11,7 @@ export class DishController {
 
   @Auth(Rol.USER)
   @Post()
-  async getDishes() { }
+  async getCategories() { }
 
   @Auth(Rol.ADMIN)
   @Patch(':id')
