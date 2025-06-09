@@ -1,10 +1,8 @@
 import { Payload } from '@modules/auth/interface/payload';
-import { DISH_TOKEN_SERVICES } from '@modules/dish/const/dish-token.const';
-import { IDish } from '@modules/dish/interface/dish.interface';
 import { USER_SERVICES_CREATE_TOKEN } from '@modules/user/const/constants.';
 import { IUser } from '@modules/user/interface/user.interface';
 import { User } from '@modules/user/user.entity';
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ItemDto } from './dto/item.dto';
@@ -25,11 +23,40 @@ export class CartService {
 
 
     // services
-    @Inject(DISH_TOKEN_SERVICES) private dish: IDish,
     @Inject(USER_SERVICES_CREATE_TOKEN) private user: IUser,
     private readonly itemService: ItemService
 
   ) { }
+
+
+  async getCart(uuidAuth: string) {
+
+    try {
+      const user = await this.user.existUuidAuth(uuidAuth);
+
+      if (!user) throw new NotFoundException('Usuario no encontrado');
+
+      const cart = await this.cartRepository.findOne({
+        where: {
+          user
+        },
+        relations: ['items', 'items.dishes']
+      })
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Datos del carrito',
+        status: 'success',
+        cart
+      }
+
+    } catch (error) {
+
+      if (error instanceof NotFoundException) throw error;
+
+      throw new InternalServerErrorException('Error al obtener el carrito')
+    }
+  }
 
   async addItem(item: ItemDto, auth: Payload) {
 
@@ -43,13 +70,15 @@ export class CartService {
         where: {
           user
         },
-        relations: ['items']
+        relations: ['items', 'items.dishes']
       })
 
       if (!cart) {
         const newCart = await this.create(user);
         cart = { ...newCart };
       }
+
+      await this.updateTotalPrice(cart)
 
       const response = await this.itemService.add(item, cart);
 
@@ -69,7 +98,7 @@ export class CartService {
 
 
 
-  async create(user: User) {
+  private async create(user: User) {
 
     try {
 
@@ -86,6 +115,23 @@ export class CartService {
     }
 
   }
+
+
+  private async updateTotalPrice(cart: Cart) {
+
+    try {
+
+      const total = cart.items.reduce((total, item) => total + item.total + cart.total, 0);
+
+      await this.cartRepository.update(cart.uuid, {
+        total,
+      })
+    } catch {
+      throw new InternalServerErrorException('Error al calcular el precio total')
+    }
+
+  }
+
 
 
 
