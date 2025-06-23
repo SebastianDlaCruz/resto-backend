@@ -56,7 +56,7 @@ export class CardService {
       const auth = req?.user as Payload;
 
 
-      const user = await this.user.existUuidAuth(auth.sub);
+      const user = await this.user.exist(auth.sub);
 
       if (!user) {
         throw new NotFoundException('Usuario no encontrado')

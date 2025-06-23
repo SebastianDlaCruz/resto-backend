@@ -3,5 +3,5 @@ import { User } from "../user.entity";
 
 export interface IUser {
   create: (auth: Auth) => Promise<void>;
-  existUuidAuth: (uuid: string) => Promise<User | null>
+  exist: (uuid: string) => Promise<User | null>
 }

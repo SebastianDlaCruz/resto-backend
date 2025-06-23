@@ -1,6 +1,5 @@
 import { Dish } from "@modules/dish/entity/dish.entity";
-import { IsNotEmpty, IsString } from "class-validator";
-import { Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 export class Category {
@@ -8,19 +7,14 @@ export class Category {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @IsNotEmpty({
-    message: 'La img de la categoría es requerido'
-  })
-  @IsString()
+  @Column()
   img: string;
 
-  @IsNotEmpty({
-    message: 'El nombre de la categoría es requerido'
-  })
-  @IsString()
+  @Unique(["name"])
+  @Column()
   name: string;
 
   @OneToMany(() => Dish, dish => dish)
-  dish: Dish
+  dish: Dish[]
 
 }

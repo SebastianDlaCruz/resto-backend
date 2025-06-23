@@ -75,10 +75,7 @@ export class AuthService {
         statusCode: HttpStatus.CREATED,
         message: 'Auth creado correctamente',
         status: 'success',
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken
       })
-
 
 
     } catch (error) {
@@ -116,13 +113,11 @@ export class AuthService {
       const payload: Payload = { email: authDB.email, sub: authDB.uuid, rol: authDB.rol };
       const tokens = await this.generateTokens(payload);
 
-
+      this.cookieService.setAuthCookie(res, tokens.accessToken, tokens.refreshToken);
       return res.json({
         statusCode: HttpStatus.OK,
         message: 'login exitoso',
         status: 'success',
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken
       })
 
     } catch (error) {
@@ -200,7 +195,7 @@ export class AuthService {
 
   }
 
-  private async exists(email: string): Promise<Auth | null> {
+  async exists(email: string): Promise<Auth | null> {
     return this.authRepository.findOne({ where: { email } });
   }
 

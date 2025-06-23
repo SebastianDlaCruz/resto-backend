@@ -32,7 +32,7 @@ export class CartService {
   async getCart(uuidAuth: string) {
 
     try {
-      const user = await this.user.existUuidAuth(uuidAuth);
+      const user = await this.user.exist(uuidAuth);
 
       if (!user) throw new NotFoundException('Usuario no encontrado');
 
@@ -62,7 +62,7 @@ export class CartService {
 
     try {
 
-      const user = await this.user.existUuidAuth(auth.sub);
+      const user = await this.user.exist(auth.sub);
 
       if (!user) throw new NotFoundException('Usuario no encontrado');
 

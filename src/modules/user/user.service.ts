@@ -135,16 +135,6 @@ export class UserService implements IUser {
   }
 
 
-  existUuidAuth(uuid: string) {
-    return this.userRepository.findOne({
-      where: {
-        auth: {
-          uuid
-        }
-      },
-    })
-  }
-
   async exist(uuid: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: {

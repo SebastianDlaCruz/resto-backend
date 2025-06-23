@@ -12,12 +12,13 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
 
       jwtFromRequest: ExtractJwt.fromExtractors([
 
-        (req: Request) => req.cookies?.refresh_token as string,
-        ExtractJwt.fromAuthHeaderAsBearerToken()
+        (req: Request) => req.cookies?.refresh_token as string || null,
+
 
       ]),
 
-      secretOrKey: configService.get('KEY_REFRESH') ?? ''
+      secretOrKey: configService.get('KEY_REFRESH') ?? '',
+      ignoreExpiration: false
 
     })
   }
