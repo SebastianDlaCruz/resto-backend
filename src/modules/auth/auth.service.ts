@@ -74,7 +74,6 @@ export class AuthService {
       return res.json({
         statusCode: HttpStatus.CREATED,
         message: 'Auth creado correctamente',
-        status: 'success',
       })
 
 
@@ -117,7 +116,6 @@ export class AuthService {
       return res.json({
         statusCode: HttpStatus.OK,
         message: 'login exitoso',
-        status: 'success',
       })
 
     } catch (error) {
@@ -134,7 +132,7 @@ export class AuthService {
   }
 
 
-  async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string, res: Response) {
 
     try {
 
@@ -160,9 +158,12 @@ export class AuthService {
         throw new InternalServerErrorException('Error al generar los tokens')
       }
 
+      this.cookieService.setAuthCookie(res, tokens.accessToken, tokens.refreshToken);
+
       return {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken
+        statusCode: HttpStatus.OK,
+        message: 'Token refrescado exitosamente',
+        payload
       }
 
     } catch (error) {
@@ -189,8 +190,6 @@ export class AuthService {
     return res.json({
       statusCode: HttpStatus.OK,
       message: 'logout exitoso',
-      status: 'success',
-
     })
 
   }

@@ -46,8 +46,7 @@ export class CartService {
       return {
         statusCode: HttpStatus.OK,
         message: 'Datos del carrito',
-        status: 'success',
-        cart
+        data: cart
       }
 
     } catch (error) {

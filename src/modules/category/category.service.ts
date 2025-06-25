@@ -23,12 +23,10 @@ export class CategoryService {
 
       return {
         statusCode: HttpStatus.CREATED,
-        success: true,
         message: 'Existo al crear la categoría'
       }
 
     } catch {
-
       throw new InternalServerErrorException('Erro al crear la categoría')
     }
   }
@@ -44,7 +42,6 @@ export class CategoryService {
       return {
         statusCode: HttpStatus.OK,
         message: 'Éxito al obtener las categorías',
-        success: true,
         data: categories
       }
 
@@ -63,8 +60,7 @@ export class CategoryService {
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Éxito al actualizar la categoría',
-        success: true,
+        message: 'Éxito al actualizar la categoría'
       }
 
     } catch {
@@ -79,8 +75,7 @@ export class CategoryService {
       await this.categoryRepository.delete(id);
       return {
         statusCode: HttpStatus.OK,
-        message: 'Éxito al eliminar la categoría',
-        success: true,
+        message: 'Éxito al eliminar la categoría'
       }
     } catch {
       throw new InternalServerErrorException('Error al eliminar la categoría');

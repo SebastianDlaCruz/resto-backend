@@ -1,3 +1,4 @@
+import { ImgService } from '@common/services';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DISH_TOKEN_SERVICES } from './const/dish-token.const';
@@ -13,7 +14,7 @@ import { Dish } from './entity/dish.entity';
   providers: [{
     provide: DISH_TOKEN_SERVICES,
     useClass: DishService
-  }, DishService],
+  }, DishService, ImgService],
   exports: [DISH_TOKEN_SERVICES]
 })
 export class DishModule { }

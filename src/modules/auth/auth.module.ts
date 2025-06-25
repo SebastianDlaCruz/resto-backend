@@ -18,6 +18,7 @@ import { RefreshStrategy } from './strategies/refresh.strategy';
     UserModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService, HastService, CookieService, JwtStrategy, RefreshStrategy]
+  providers: [AuthService, JwtService, HastService, CookieService, JwtStrategy, RefreshStrategy],
+  exports: [AuthService, CookieService]
 })
 export class AuthModule { }

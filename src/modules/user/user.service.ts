@@ -87,8 +87,7 @@ export class UserService implements IUser {
 
       return res.json({
         statusCode: HttpStatus.OK,
-        message: 'Usuario actualizado',
-        status: 'success'
+        message: 'Usuario actualizado'
       })
 
 
@@ -123,7 +122,7 @@ export class UserService implements IUser {
       return res.json({
         statusCode: HttpStatus.OK,
         message: 'Usuario encontrado',
-        user
+        data: user
       })
 
 

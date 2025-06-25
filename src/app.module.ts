@@ -30,5 +30,6 @@ import { AuthModule, CardModule, CartModule, CategoryModule, DishModule, OrderMo
   ],
   controllers: [AppController],
   providers: [AppService, ImgService],
+  exports: [AuthModule]
 })
 export class AppModule { }

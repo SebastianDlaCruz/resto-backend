@@ -24,7 +24,6 @@ export class UserController {
   @Auth(Rol.USER)
   @Get()
   async getUser(@Res() res: Response, @Req() req: Request) {
-
     const auth = req?.user as Payload;
     return this.userService.getUser(res, auth)
   }

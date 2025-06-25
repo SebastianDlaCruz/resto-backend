@@ -1,7 +1,7 @@
 import { Auth } from '@common/decorators';
 import { Rol } from '@common/enums';
 import { Payload } from '@modules/auth/interface/payload';
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { CartService } from './cart.service';
 import { ItemDto } from './dto/item.dto';
@@ -20,6 +20,11 @@ export class CartController {
     return this.cartService.addItem(item, auth)
   }
 
+  @Auth(Rol.USER)
+  @Delete('delete-item')
+  async delete() {
+
+  }
 
   @Auth(Rol.USER)
   @Get()
