@@ -22,22 +22,25 @@ export class ItemService {
   async add(item: ItemDto, cart: Cart) {
 
     try {
+
       const dish = await this.dish.exist(item.idDish);
+
 
       if (!dish) throw new NotFoundException('El platillo no existe');
 
+
       const newItem = this.itemRepository.create({
-        dishes: [dish],
         cart,
         count: item.count,
-        total: item.total * item.count
+        total: parseFloat(dish.price) * item.count,
+        dish
       })
+
 
       await this.itemRepository.save(newItem)
 
       return {
         statusCode: HttpStatus.OK,
-        status: 'success',
         message: 'Existo al agregar el item al carrito'
       }
 
@@ -47,8 +50,25 @@ export class ItemService {
 
 
 
-      throw new InternalServerErrorException('Erro al agregar el platillo al carrito')
+      throw new InternalServerErrorException('Error al agregar el platillo al item del carrito')
     }
 
   }
+
+  async delete(id: number) {
+    try {
+
+      await this.itemRepository.delete(id);
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Existo al eliminar el item al carrito'
+      }
+
+    } catch {
+      throw new InternalServerErrorException('Error al eliminar el item del carrito')
+    }
+  }
+
+
 }

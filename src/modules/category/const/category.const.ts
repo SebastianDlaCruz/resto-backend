@@ -1,0 +1,1 @@
+export const CATEGORY_TOKEN = 'CATEGORY_TOKEN';

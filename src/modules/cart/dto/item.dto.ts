@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber } from "class-validator";
+import { IsInt, IsNotEmpty } from "class-validator";
 
 export class ItemDto {
 
@@ -10,7 +10,4 @@ export class ItemDto {
   @IsNotEmpty({ message: 'La cantidad es requerida' })
   count: number;
 
-  @IsNumber()
-  @IsNotEmpty({ message: 'El total  es requerida' })
-  total: number;
 }

@@ -1,5 +1,4 @@
-import { RefreshTokenInterceptor, ResponseSuccessInterceptor } from '@common/interceptors';
-import { AuthService, CookieService } from '@modules/auth';
+import { ResponseSuccessInterceptor } from '@common/interceptors';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
@@ -13,12 +12,9 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1/');
 
   app.use(cookieParser());
-  const authService = app.get(AuthService);
-  const cookieService = app.get(CookieService);
 
   app.useGlobalInterceptors(
-    new ResponseSuccessInterceptor(),
-    new RefreshTokenInterceptor(authService, cookieService)
+    new ResponseSuccessInterceptor()
   );
 
   app.enableCors({

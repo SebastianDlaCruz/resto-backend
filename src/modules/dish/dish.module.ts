@@ -1,4 +1,5 @@
 import { ImgService } from '@common/services';
+import { CategoryModule } from '@modules/category/category.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DISH_TOKEN_SERVICES } from './const/dish-token.const';
@@ -8,7 +9,8 @@ import { Dish } from './entity/dish.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Dish])
+    TypeOrmModule.forFeature([Dish]),
+    CategoryModule
   ],
   controllers: [DishController],
   providers: [{

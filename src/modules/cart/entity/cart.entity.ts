@@ -8,8 +8,7 @@ export class Cart {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @OneToMany(() => ItemCart, (ItemCart) => ItemCart)
-  @JoinColumn()
+  @OneToMany(() => ItemCart, (ItemCart) => ItemCart.cart)
   items: ItemCart[];
 
 
@@ -19,4 +18,5 @@ export class Cart {
 
   @Column()
   total: number;
+
 }

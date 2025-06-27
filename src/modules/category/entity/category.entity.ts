@@ -14,7 +14,7 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToMany(() => Dish, dish => dish)
+  @OneToMany(() => Dish, dish => dish.category)
   dish: Dish[]
 
 }

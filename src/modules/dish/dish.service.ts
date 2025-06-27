@@ -1,4 +1,6 @@
-import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { CATEGORY_TOKEN } from '@modules/category/const/category.const';
+import { CategoryMethod } from '@modules/category/interface/category.interface';
+import { HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DishCreateDto } from './dto/dish-create.dto';
@@ -12,7 +14,7 @@ export class DishService implements IDish {
     // Repository
     @InjectRepository(Dish)
     private dishRepository: Repository<Dish>,
-
+    @Inject(CATEGORY_TOKEN) private category: CategoryMethod
 
   ) { }
 
@@ -29,10 +31,16 @@ export class DishService implements IDish {
   async create(dish: DishCreateDto) {
 
     try {
-      console.table(dish)
-      const newDish = this.dishRepository.create(dish);
+
+      const category = await this.category.exist(parseInt(dish.categoryId))
+
+      const newDish = this.dishRepository.create({
+        ...dish,
+        category
+      });
 
       await this.dishRepository.save(newDish);
+
 
       return {
         statusCode: HttpStatus.CREATED,
@@ -48,6 +56,7 @@ export class DishService implements IDish {
     try {
 
       if (id_category) {
+
         const dishes = await this.dishRepository.find({
           where: {
             category: {

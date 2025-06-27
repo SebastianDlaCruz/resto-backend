@@ -1,7 +1,7 @@
 
-import { AccessTokenGuard } from '@common/guards';
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { AccessTokenGuard, RefreshTokenGuard } from '@common/guards';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -20,10 +20,17 @@ export class AuthController {
     return this.authService.signup(authDto, res)
   }
 
-  @Post('login')
+  @Post('singin')
   @HttpCode(HttpStatus.OK)
   async login(@Body() authDto: AuthDto, @Res() res: Response) {
     return this.authService.login(authDto, res)
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get('refresh_token')
+  refresh(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies['refresh_token'] as string;
+    return this.authService.refreshToken(refreshToken, res)
   }
 
   @UseGuards(AccessTokenGuard)

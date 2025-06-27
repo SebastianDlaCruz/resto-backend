@@ -3,14 +3,36 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/category.dto';
 import { Category } from './entity/category.entity';
+import { CategoryMethod } from './interface/category.interface';
 
 @Injectable()
-export class CategoryService {
+export class CategoryService implements CategoryMethod {
 
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>
   ) { }
+
+  async exist(id: number): Promise<Category> {
+
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: { id }
+      })
+
+      if (!category) throw new NotFoundException('Categoría no existente')
+
+
+      return category;
+
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new NotFoundException('Error al obtener la categoría')
+    }
+  }
 
 
   async create(categoryDto: CreateCategoryDto) {
@@ -81,4 +103,5 @@ export class CategoryService {
       throw new InternalServerErrorException('Error al eliminar la categoría');
     }
   }
+
 }

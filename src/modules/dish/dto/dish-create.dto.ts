@@ -33,5 +33,5 @@ export class DishCreateDto {
 
   @IsNotEmpty({ message: 'La categoría no puede estar vacía' })
   @IsString({ message: 'El ID de categoría debe ser una cadena  de texto' })
-  id_category: string;
+  categoryId: string;
 }

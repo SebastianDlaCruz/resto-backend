@@ -1,5 +1,5 @@
 import { Dish } from "@modules/dish/entity/dish.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Cart } from "./cart.entity";
 
 @Entity()
@@ -8,11 +8,12 @@ export class ItemCart {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToMany(() => Dish, (dish) => dish)
-  @JoinTable()
-  dishes: Dish[]
+  @ManyToOne(() => Dish, (dish) => dish.itemCart)
+  @JoinColumn()
+  dish: Dish
 
   @ManyToOne(() => Cart, (cart) => cart.items)
+  @JoinColumn()
   cart: Cart;
 
   @Column()

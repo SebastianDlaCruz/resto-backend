@@ -40,8 +40,12 @@ export class CartService {
         where: {
           user
         },
-        relations: ['items', 'items.dishes']
+        relations: {
+          items: { dish: true }
+        }
       })
+
+      if (cart) await this.updateTotalPrice(cart)
 
       return {
         statusCode: HttpStatus.OK,
@@ -69,7 +73,7 @@ export class CartService {
         where: {
           user
         },
-        relations: ['items', 'items.dishes']
+
       })
 
       if (!cart) {
@@ -77,7 +81,6 @@ export class CartService {
         cart = { ...newCart };
       }
 
-      await this.updateTotalPrice(cart)
 
       const response = await this.itemService.add(item, cart);
 
@@ -116,15 +119,22 @@ export class CartService {
   }
 
 
+
+
   private async updateTotalPrice(cart: Cart) {
 
     try {
 
+      console.log('ITEMS', cart.items)
+
       const total = cart.items.reduce((total, item) => total + item.total + cart.total, 0);
 
+      console.log('ITEMS', total)
+
       await this.cartRepository.update(cart.uuid, {
-        total,
-      })
+        total
+      });
+
     } catch {
       throw new InternalServerErrorException('Error al calcular el precio total')
     }
@@ -132,7 +142,10 @@ export class CartService {
   }
 
 
+  async deleteItem(id: number) {
+    return await this.itemService.delete(id);
 
+  }
 
 
 }
