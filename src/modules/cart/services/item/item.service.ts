@@ -37,12 +37,10 @@ export class ItemService {
       })
 
 
-      await this.itemRepository.save(newItem)
+      const newItems = await this.itemRepository.save(newItem);
 
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Existo al agregar el item al carrito'
-      }
+
+      return newItems;
 
     } catch (error) {
 

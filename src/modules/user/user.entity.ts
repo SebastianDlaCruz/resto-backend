@@ -1,5 +1,6 @@
 import { Auth } from "@modules/auth/entity/auth.entity";
 import { Cart } from "@modules/cart/entity/cart.entity";
+import { Order } from "@modules/order/entity/order.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -35,4 +36,9 @@ export class User {
 
   @OneToOne(() => Cart, (cart) => cart.user)
   cart: Cart;
+
+
+  @OneToOne(() => Order, (order) => order.user)
+  order: Order;
+
 }

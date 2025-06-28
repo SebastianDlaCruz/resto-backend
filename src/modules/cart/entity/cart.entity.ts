@@ -1,3 +1,4 @@
+import { Order } from "@modules/order/entity/order.entity";
 import { User } from "@modules/user/user.entity";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ItemCart } from "./item-cart.entity";
@@ -11,6 +12,8 @@ export class Cart {
   @OneToMany(() => ItemCart, (ItemCart) => ItemCart.cart)
   items: ItemCart[];
 
+  @OneToOne(() => Order, (order) => order.cart)
+  order: Order
 
   @OneToOne(() => User)
   @JoinColumn()

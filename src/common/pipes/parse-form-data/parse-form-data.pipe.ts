@@ -11,8 +11,6 @@ export class ParseFormDataPipe implements PipeTransform {
 
     const error = await validate(dto);
 
-    console.log('error', error);
-
     if (error.length > 0) throw new BadRequestException('Validación fallida')
 
     return dto;

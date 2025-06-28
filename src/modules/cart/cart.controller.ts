@@ -22,8 +22,9 @@ export class CartController {
 
   @Auth(Rol.USER)
   @Delete('delete-item/:id')
-  async delete(@Param('id') id: string) {
-    return this.cartService.deleteItem(parseInt(id));
+  async delete(@Param('id') id: string, @Req() req: Request) {
+    const auth = req.user as Payload;
+    return this.cartService.deleteItem(auth.sub, parseInt(id));
   }
 
   @Auth(Rol.USER)

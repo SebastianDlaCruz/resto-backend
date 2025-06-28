@@ -45,7 +45,9 @@ export class CartService {
         }
       })
 
-      if (cart) await this.updateTotalPrice(cart)
+      if (!cart) throw new NotFoundException('Carrito no encontrado');
+
+
 
       return {
         statusCode: HttpStatus.OK,
@@ -82,9 +84,17 @@ export class CartService {
       }
 
 
-      const response = await this.itemService.add(item, cart);
+      const newItems = await this.itemService.add(item, cart);
 
-      return response;
+
+      await this.updateTotalPrice(cart.uuid, this.sumTotal(newItems.total, cart.total));
+
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Item agregado al carrito',
+
+      }
 
 
     } catch (error) {
@@ -97,7 +107,6 @@ export class CartService {
 
     }
   }
-
 
 
   private async create(user: User) {
@@ -118,34 +127,67 @@ export class CartService {
 
   }
 
-
-
-
-  private async updateTotalPrice(cart: Cart) {
+  async deleteItem(uuidUser: string, id: number) {
 
     try {
 
-      console.log('ITEMS', cart.items)
+      const user = await this.user.exist(uuidUser);
 
-      const total = cart.items.reduce((total, item) => total + item.total + cart.total, 0);
+      if (!user) throw new NotFoundException('Usuario no encontrado');
 
-      console.log('ITEMS', total)
+      const cart = await this.cartRepository.findOne({
+        where: {
+          user
+        }
+      })
 
-      await this.cartRepository.update(cart.uuid, {
+      if (!cart) throw new NotFoundException('Carrito no encontrado');
+
+      const item = await this.itemRepository.findOne({
+        where: {
+          id
+        }
+      })
+
+      if (!item) throw new NotFoundException('Item no encontrado');
+
+
+      await this.updateTotalPrice(cart.uuid, this.decrementTotal(cart.total, item.total));
+
+      return this.itemService.delete(id);
+
+    } catch (error) {
+
+      if (error instanceof NotFoundException) throw error;
+
+      throw new InternalServerErrorException('Error al eliminar el item del carrito')
+    }
+
+
+  }
+
+
+  private sumTotal(total: number, price: number) {
+    return total + price;
+  }
+
+  private decrementTotal(total: number, price: number) {
+    return total - price;
+  }
+
+  private async updateTotalPrice(uuidCart: string, total: number) {
+
+    try {
+
+      await this.cartRepository.update(uuidCart, {
         total
       });
+
 
     } catch {
       throw new InternalServerErrorException('Error al calcular el precio total')
     }
 
   }
-
-
-  async deleteItem(id: number) {
-    return await this.itemService.delete(id);
-
-  }
-
 
 }

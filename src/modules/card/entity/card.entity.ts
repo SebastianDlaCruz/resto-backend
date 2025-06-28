@@ -1,7 +1,8 @@
 import { CardeEnum } from "@common/enums";
 import { ItemCart } from "@modules/cart/entity/item-cart.entity";
+import { Order } from "@modules/order/entity/order.entity";
 import { User } from "@modules/user/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Card {
@@ -29,4 +30,7 @@ export class Card {
   @Column()
   cvv: number;
 
+
+  @OneToOne(() => Order, (order) => order.card)
+  order: Order;
 }
