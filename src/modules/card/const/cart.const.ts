@@ -1,0 +1,1 @@
+export const CARD_TOKEN = 'CARD_TOKEN';

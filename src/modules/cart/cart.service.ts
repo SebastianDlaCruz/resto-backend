@@ -8,10 +8,11 @@ import { Repository } from 'typeorm';
 import { ItemDto } from './dto/item.dto';
 import { Cart } from './entity/cart.entity';
 import { ItemCart } from './entity/item-cart.entity';
+import { CartMethods } from './interface/cart.interface';
 import { ItemService } from './services/item/item.service';
 
 @Injectable()
-export class CartService {
+export class CartService implements CartMethods {
 
   constructor(
 
@@ -27,6 +28,10 @@ export class CartService {
     private readonly itemService: ItemService
 
   ) { }
+
+  exist(uuid: string): Promise<Cart | null> {
+    return this.cartRepository.findOne({ where: { uuid } })
+  }
 
 
   async getCart(uuidAuth: string) {

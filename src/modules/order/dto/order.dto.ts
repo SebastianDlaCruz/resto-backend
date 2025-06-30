@@ -5,11 +5,6 @@ export class OrderDto {
   @IsString({
     message: 'El uuid del usuario es requerido'
   })
-  @IsNotEmpty({
-    message: 'El uuid del usuario es requerido'
-  })
-  userUuid: string;
-
   @IsString({
     message: 'El uuid del carrito es requerido'
   })

@@ -1,7 +1,8 @@
 import { Auth } from "@modules/auth/entity/auth.entity";
 import { Cart } from "@modules/cart/entity/cart.entity";
+import { Comment } from "@modules/comment/entity/comment.entity";
 import { Order } from "@modules/order/entity/order.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -41,4 +42,6 @@ export class User {
   @OneToOne(() => Order, (order) => order.user)
   order: Order;
 
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comment: Comment
 }

@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ImgService } from './common/services/img/img.service';
 import { AuthModule, CardModule, CartModule, CategoryModule, DishModule, OrderModule, UserModule } from './modules';
+import { CommentModule } from './modules/comment/comment.module';
 
 
 @Module({
@@ -26,7 +27,8 @@ import { AuthModule, CardModule, CartModule, CategoryModule, DishModule, OrderMo
     OrderModule,
     CategoryModule,
     CartModule,
-    DishModule
+    DishModule,
+    CommentModule
   ],
   controllers: [AppController],
   providers: [AppService, ImgService],

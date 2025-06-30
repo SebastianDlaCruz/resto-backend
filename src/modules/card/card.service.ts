@@ -7,9 +7,10 @@ import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { CardDto } from './dto/card.dto';
 import { Card } from './entity/card.entity';
+import { CardMethods } from './interface/card.interface';
 
 @Injectable()
-export class CardService {
+export class CardService implements CardMethods {
 
   constructor(
 
@@ -20,6 +21,10 @@ export class CardService {
     // services
     @Inject(USER_SERVICES_CREATE_TOKEN) private user: IUser) { }
 
+  exist(uuid: string): Promise<Card | null> {
+    return this.cardRepository.findOne({ where: { uuid } });
+  }
+
 
   async getCards(req: Request) {
 
@@ -27,7 +32,7 @@ export class CardService {
 
       const auth = req?.user as Payload;
 
-      const cards = await this.cardRepository.find({
+      const card = await this.cardRepository.find({
         where: {
           user: {
             uuid: auth.sub
@@ -37,9 +42,8 @@ export class CardService {
 
       return {
         statusCode: HttpStatus.OK,
-        status: 'success',
         message: 'Éxito al consultar las tarjetas',
-        cards
+        data: card
       }
 
 
@@ -73,7 +77,6 @@ export class CardService {
 
       return {
         statusCode: HttpStatus.CREATED,
-        status: 'success',
         message: 'Éxito al crear la tarjeta'
       }
     } catch (error) {
@@ -102,7 +105,6 @@ export class CardService {
 
       return {
         statusCode: HttpStatus.OK,
-        status: 'success',
         message: 'Éxito al eliminar la tarjeta'
       }
 

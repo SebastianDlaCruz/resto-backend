@@ -1,7 +1,7 @@
 import { Auth } from '@common/decorators';
 import { Rol } from '@common/enums';
 import { Payload } from '@modules/auth/interface/payload';
-import { Body, Controller, Get, Param, Patch, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -16,9 +16,10 @@ export class UserController {
   ) { }
 
   @Auth(Rol.USER)
-  @Patch(':uuid')
-  async update(@Body() user: UserDto, @Param('uuid') uuid: string, @Res() res: Response) {
-    return this.userService.update(user, uuid, res)
+  @Patch()
+  async update(@Body() user: UserDto, @Res() res: Response, @Req() req: Request) {
+    const auth = req?.user as Payload;
+    return this.userService.update(user, auth.sub, res)
   }
 
   @Auth(Rol.USER)

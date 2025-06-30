@@ -17,6 +17,16 @@ export class UserService implements IUser {
 
   ) { }
 
+  searchForAuth(uuidAuth: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: {
+        auth: {
+          uuid: uuidAuth
+        }
+      }
+    })
+  }
+
 
   async create(auth: Auth) {
 
