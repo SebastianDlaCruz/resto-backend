@@ -79,7 +79,7 @@ export class UserService implements IUser {
         throw new NotFoundException('Usuario no encontrado');
       }
 
-      const update = await this.userRepository.update({
+      await this.userRepository.update({
         uuid: uuid
       }, {
         address: user.address,
@@ -91,9 +91,6 @@ export class UserService implements IUser {
         clarification: user.clarification
       })
 
-      if (!update) {
-        throw new InternalServerErrorException('Error al actualizar los datos');
-      }
 
       return res.json({
         statusCode: HttpStatus.OK,
@@ -107,9 +104,7 @@ export class UserService implements IUser {
         throw error;
       }
 
-      if (error instanceof InternalServerErrorException) {
-        throw error
-      }
+      throw new InternalServerErrorException('Error al actualizar los datos');
 
     }
   }

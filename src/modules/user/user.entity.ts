@@ -39,8 +39,8 @@ export class User {
   cart: Cart;
 
 
-  @OneToOne(() => Order, (order) => order.user)
-  order: Order;
+  @OneToMany(() => Order, (order) => order.user)
+  order: Order[];
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comment: Comment

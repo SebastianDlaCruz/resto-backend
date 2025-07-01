@@ -1,7 +1,7 @@
 import { Card } from "@modules/card/entity/card.entity";
 import { Cart } from "@modules/cart/entity/cart.entity";
 import { User } from "@modules/user/user.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Order {
@@ -17,7 +17,7 @@ export class Order {
   @JoinColumn()
   user: User;
 
-  @OneToOne(() => Card, (card) => card.order)
+  @ManyToOne(() => Card, (card) => card.order)
   @JoinColumn()
   card: Card;
 

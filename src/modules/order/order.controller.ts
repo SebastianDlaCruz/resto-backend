@@ -23,7 +23,7 @@ export class OrderController {
   }
 
   @Auth(Rol.USER)
-  @Get('generar-pdf/:uuid')
+  @Get('generate-pdf/:uuid')
   async generaPdf(
     @Param('uuid') uuid: string,
     @Res() res: Response

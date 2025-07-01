@@ -54,7 +54,10 @@ export class OrderService {
 
       return {
         statusCode: HttpStatus.CREATED,
-        message: 'Orden creada correctamente'
+        message: 'Orden creada correctamente',
+        data: {
+          "uuid": newOrder.uuid
+        }
       }
 
     } catch (error) {
@@ -99,6 +102,12 @@ export class OrderService {
 
       const pdfBuffer = await this.generatePdfService.generate(order);
 
+      console.log(`
+        ******** pdfBuffer *****
+
+        ${pdfBuffer.toString()} 
+        `)
+
       res.setHeader('Content-Type', 'application/pdf')
       res.setHeader('Content-Disposition', `attachment; filename=${uuidOrder}.pdf`);
       res.setHeader('Content-Length', pdfBuffer.length);
@@ -110,7 +119,7 @@ export class OrderService {
       }
 
     } catch (error) {
-
+      console.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Error al generar el pdf');
     }
@@ -118,7 +127,16 @@ export class OrderService {
 
 
   private async exist(uuid: string) {
-    return await this.orderRepository.findOne({ where: { uuid } });
+    return await this.orderRepository.findOne({
+      where: { uuid }, relations: {
+        user: true,
+        cart: {
+          items: {
+            dish: true
+          },
+        },
+      }
+    });
 
   }
 
