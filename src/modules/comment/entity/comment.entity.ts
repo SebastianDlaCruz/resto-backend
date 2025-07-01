@@ -1,3 +1,4 @@
+import { Dish } from "@modules/dish/entity/dish.entity";
 import { User } from "@modules/user/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,6 +10,10 @@ export class Comment {
 
   @Column()
   comment: string;
+
+  @ManyToOne(() => Dish, (dish) => dish.comment)
+  @JoinColumn()
+  dish: Dish;
 
   @ManyToOne(() => User, (user) => user.comment)
   @JoinColumn()

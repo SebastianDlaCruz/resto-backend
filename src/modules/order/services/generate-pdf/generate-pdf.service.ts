@@ -3,9 +3,10 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as path from 'node:path';
 import * as PDFDocument from 'pdfkit';
 
+
+
 @Injectable()
 export class GeneratePdfService {
-
   private readonly assetsPath = path.join(__dirname, '../../../../../public/assets');
 
   generate(order: Order): Promise<Buffer> {
@@ -32,13 +33,19 @@ export class GeneratePdfService {
       doc.fontSize(15).text(`Order #${order.uuid}`, 100, 50, { align: 'center' });
 
       doc.fillColor('#0e0e0e').fontSize(16).text('Datos del usuario:').moveDown(0.2);
-      console.table(order.user);
+
+      doc.table({
+        data: [
+          ['Column 1', 'Column 2', 'Column 3']
+        ]
+      })
+
       doc.fillColor('#0e0e0e').fontSize(16).text(`Nombre: ${order.user.username}`).moveDown(0.2);
       doc.fillColor('#0e0e0e').fontSize(16).text(`Dirección: ${order.user.address}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Número: ${order.user.number}`).moveDown(0.2);
+      doc.fillColor('#0e0e0e').fontSize(16).text(`Numero: ${order.user.number}`).moveDown(0.2);
       doc.fillColor('#0e0e0e').fontSize(16).text(`Piso: ${order.user.floor}`).moveDown(0.2);
       doc.fillColor('#0e0e0e').fontSize(16).text(`Contacto: ${order.user.contact}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Código postal: ${order.user.postal_code}`).moveDown(0.2);
+      doc.fillColor('#0e0e0e').fontSize(16).text(`Codigo postal: ${order.user.postal_code}`).moveDown(0.2);
 
       doc.fillColor('#0e0e0e').fontSize(16).text('Productos:')
 
@@ -52,7 +59,4 @@ export class GeneratePdfService {
       doc.end();
     })
   }
-
-
-
 }

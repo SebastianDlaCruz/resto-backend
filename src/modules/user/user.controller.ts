@@ -17,9 +17,9 @@ export class UserController {
 
   @Auth(Rol.USER)
   @Patch()
-  async update(@Body() user: UserDto, @Res() res: Response, @Req() req: Request) {
-    const auth = req?.user as Payload;
-    return this.userService.update(user, auth.sub, res)
+  async update(@Body() user: UserDto, @Req() req: Request) {
+    const auth = req.user as Payload;
+    return this.userService.update(user, auth.sub)
   }
 
   @Auth(Rol.USER)

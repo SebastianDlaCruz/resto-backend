@@ -2,10 +2,11 @@ import { Auth } from '@common/decorators';
 import { Rol } from '@common/enums';
 import { ParseFormDataPipe } from '@common/pipes';
 import { ImgService } from '@common/services';
-import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DishService } from './dish.service';
 import { DishCreateDto } from './dto/dish-create.dto';
+import { UpdateDishQualificationDto } from './dto/update-dish-qualification}.dto';
 
 @Controller('dish')
 export class DishController {
@@ -51,6 +52,13 @@ export class DishController {
       img
     });
 
+  }
+
+
+  @Auth(Rol.USER)
+  @Put(':id')
+  async getUpdateQualification(@Param('id') id: number, @Body() qualification: UpdateDishQualificationDto) {
+    return this.dishService.updateCalcification(id, qualification);
   }
 
 

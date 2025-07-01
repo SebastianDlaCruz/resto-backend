@@ -69,7 +69,7 @@ export class UserService implements IUser {
     }
   }
 
-  async update(user: UserDto, uuid: string, res: Response) {
+  async update(user: UserDto, uuid: string) {
 
     try {
 
@@ -80,22 +80,14 @@ export class UserService implements IUser {
       }
 
       await this.userRepository.update({
-        uuid: uuid
-      }, {
-        address: user.address,
-        username: user.username,
-        number: user.number,
-        floor: user.floor,
-        contact: user.contact,
-        postal_code: user.postal_code,
-        clarification: user.clarification
-      })
+        uuid: exist.uuid
+      }, user);
 
 
-      return res.json({
+      return {
         statusCode: HttpStatus.OK,
         message: 'Usuario actualizado'
-      })
+      }
 
 
     } catch (error) {

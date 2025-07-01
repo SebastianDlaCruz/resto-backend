@@ -4,6 +4,7 @@ import { HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundE
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DishCreateDto } from './dto/dish-create.dto';
+import { UpdateDishQualificationDto } from './dto/update-dish-qualification}.dto';
 import { Dish } from './entity/dish.entity';
 import { IDish } from './interface/dish.interface';
 
@@ -106,6 +107,29 @@ export class DishService implements IDish {
       }
       throw new InternalServerErrorException('Error al actualizar el platillo')
 
+    }
+  }
+
+
+  async updateCalcification(id: number, qualification: UpdateDishQualificationDto) {
+    try {
+
+      const dish = await this.exist(id);
+
+      if (!dish) throw new NotFoundException('Platillo no encontrado');
+
+      await this.dishRepository.update(id, {
+        qualification: qualification.qualification
+      });
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Éxito al actualizar la calificación'
+      }
+
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Error al actualizar la calificación');
     }
   }
 

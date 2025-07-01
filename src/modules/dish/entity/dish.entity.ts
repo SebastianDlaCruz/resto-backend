@@ -1,5 +1,6 @@
 import { ItemCart } from "@modules/cart/entity/item-cart.entity";
 import { Category } from "@modules/category/entity/category.entity";
+import { Comment } from "@modules/comment/entity/comment.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -21,7 +22,7 @@ export class Dish {
   price: string;
 
   @Column({ default: '0' })
-  calcification: string;
+  qualification: string;
 
   @Column({ default: 'false' })
   promotion: string;
@@ -36,5 +37,8 @@ export class Dish {
 
   @OneToMany(() => ItemCart, itemCart => itemCart.dish)
   itemCart: ItemCart[];
+
+  @OneToMany(() => Comment, (comment) => comment.dish)
+  comment: Comment[]
 
 }
