@@ -102,12 +102,6 @@ export class OrderService {
 
       const pdfBuffer = await this.generatePdfService.generate(order);
 
-      console.log(`
-        ******** pdfBuffer *****
-
-        ${pdfBuffer.toString()} 
-        `)
-
       res.setHeader('Content-Type', 'application/pdf')
       res.setHeader('Content-Disposition', `attachment; filename=${uuidOrder}.pdf`);
       res.setHeader('Content-Length', pdfBuffer.length);

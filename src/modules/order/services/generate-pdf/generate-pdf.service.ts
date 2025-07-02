@@ -34,14 +34,9 @@ export class GeneratePdfService {
 
       doc.fillColor('#0e0e0e').fontSize(16).text('Datos del usuario:').moveDown(0.2);
 
-      doc.table({
-        data: [
-          ['Column 1', 'Column 2', 'Column 3']
-        ]
-      })
 
       doc.fillColor('#0e0e0e').fontSize(16).text(`Nombre: ${order.user.username}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Dirección: ${order.user.address}`).moveDown(0.2);
+      doc.fillColor('#0e0e0e').fontSize(16).text(`Direccion: ${order.user.address}`).moveDown(0.2);
       doc.fillColor('#0e0e0e').fontSize(16).text(`Numero: ${order.user.number}`).moveDown(0.2);
       doc.fillColor('#0e0e0e').fontSize(16).text(`Piso: ${order.user.floor}`).moveDown(0.2);
       doc.fillColor('#0e0e0e').fontSize(16).text(`Contacto: ${order.user.contact}`).moveDown(0.2);

@@ -158,4 +158,23 @@ export class DishService implements IDish {
     }
   }
 
+  async getFindOnde(id: number) {
+    try {
+
+      const dish = await this.dishRepository.findOne({ where: { id } });
+
+      if (!dish) throw new NotFoundException('Platillo no encontrado');
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Platillo encontrado',
+        data: dish
+      }
+    } catch (error) {
+
+      if (error instanceof NotFoundException) throw error;
+
+      throw new InternalServerErrorException('Error al obtener el platillo');
+    }
+  }
 }

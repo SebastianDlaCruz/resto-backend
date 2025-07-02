@@ -2,7 +2,7 @@ import { Auth } from '@common/decorators';
 import { Rol } from '@common/enums';
 import { ParseFormDataPipe } from '@common/pipes';
 import { ImgService } from '@common/services';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DishService } from './dish.service';
 import { DishCreateDto } from './dto/dish-create.dto';
@@ -33,7 +33,7 @@ export class DishController {
 
   @Auth(Rol.USER)
   @Get()
-  async getDishes(@Param('id_category') id_category: string) {
+  async getDishes(@Query('id_category') id_category: string) {
     return this.dishService.getDishes(parseInt(id_category))
   }
 
@@ -45,12 +45,14 @@ export class DishController {
     @UploadedFile() file: Express.Multer.File,
     @Body(new ParseFormDataPipe()) dish: DishCreateDto
   ) {
-    const img = await this.imgService.updateLoadImg(file);
 
-    return this.dishService.update(parseInt(id), {
-      ...dish,
-      img
-    });
+    if (file) {
+      const img = await this.imgService.updateLoadImg(file);
+      dish.img = img
+    }
+
+
+    return this.dishService.update(parseInt(id), dish);
 
   }
 
@@ -68,5 +70,13 @@ export class DishController {
 
     return this.dishService.delete(parseInt(id));
   }
+
+
+  @Auth(Rol.USER)
+  @Get(':id')
+  async getFindOnde(@Param('id') id: string) {
+    return this.dishService.getFindOnde(parseInt(id));
+  }
+
 
 }

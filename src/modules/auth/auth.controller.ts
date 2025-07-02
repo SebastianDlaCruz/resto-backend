@@ -14,13 +14,13 @@ export class AuthController {
   ) { }
 
 
-  @Post('signup')
+  @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() authDto: CreateAuthDto, @Res() res: Response) {
     return this.authService.signup(authDto, res)
   }
 
-  @Post('singin')
+  @Post('sing-in')
   @HttpCode(HttpStatus.OK)
   async login(@Body() authDto: AuthDto, @Res() res: Response) {
     return this.authService.login(authDto, res)
@@ -34,7 +34,7 @@ export class AuthController {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get('logout')
+  @Get('sing-out')
   logout(@Res() res: Response) {
     return this.authService.logout(res);
   }

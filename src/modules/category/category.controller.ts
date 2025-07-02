@@ -6,6 +6,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInt
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 
 @Controller('category')
@@ -42,16 +43,16 @@ export class CategoryController {
   async update(
     @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
-    @Body(new ParseFormDataPipe()) categoryDto: CreateCategoryDto
+    @Body(new ParseFormDataPipe()) categoryDto: UpdateCategoryDto
   ) {
 
-    const img = await this.imgService.updateLoadImg(file);
+    if (file) {
+      const img = await this.imgService.updateLoadImg(file);
+      categoryDto.img = img;
+    }
 
     return this.categoryService.update(id,
-      {
-        ...categoryDto,
-        img
-      }
+      categoryDto
     )
   }
 

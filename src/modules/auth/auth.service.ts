@@ -87,6 +87,7 @@ export class AuthService {
         throw error;
       }
 
+      throw new InternalServerErrorException('Error al crear el auth');
     }
 
   }
@@ -97,6 +98,7 @@ export class AuthService {
 
       // Validar email
       const authDB = await this.exists(auth.email);
+
       if (!authDB) {
         throw new NotFoundException('El email no existe');
       }
@@ -120,13 +122,19 @@ export class AuthService {
 
     } catch (error) {
 
-      if (error instanceof ConflictException) {
+      if (error instanceof UnauthorizedException) {
+        throw error
+      }
+      if (error instanceof NotFoundException) {
         throw error;
       }
 
       if (error instanceof InternalServerErrorException) {
         throw error;
       }
+
+
+      throw new InternalServerErrorException('Error al iniciar sesión');
 
     }
   }
@@ -160,11 +168,10 @@ export class AuthService {
 
       this.cookieService.setAuthCookie(res, tokens.accessToken, tokens.refreshToken);
 
-      return {
+      return res.json({
         statusCode: HttpStatus.OK,
-        message: 'Token refrescado exitosamente',
-        payload
-      }
+        message: 'Token refrescado exitosamente'
+      })
 
     } catch (error) {
 
@@ -185,12 +192,22 @@ export class AuthService {
 
 
   logout(res: Response) {
-    this.cookieService.clearCookie(res);
 
-    return res.json({
-      statusCode: HttpStatus.OK,
-      message: 'logout exitoso',
-    })
+    try {
+
+
+      this.cookieService.clearCookie(res);
+
+      return res.json({
+        statusCode: HttpStatus.OK,
+        message: 'logout exitoso',
+      })
+
+
+    } catch {
+
+      throw new InternalServerErrorException('Error al cerrar sesión');
+    }
 
   }
 
