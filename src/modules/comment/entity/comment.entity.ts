@@ -11,6 +11,9 @@ export class Comment {
   @Column()
   comment: string;
 
+  @Column()
+  qualification: number;
+
   @ManyToOne(() => Dish, (dish) => dish.comment)
   @JoinColumn()
   dish: Dish;

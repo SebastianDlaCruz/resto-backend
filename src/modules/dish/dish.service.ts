@@ -15,9 +15,47 @@ export class DishService implements IDish {
     // Repository
     @InjectRepository(Dish)
     private dishRepository: Repository<Dish>,
-    @Inject(CATEGORY_TOKEN) private category: CategoryMethod
+    @Inject(CATEGORY_TOKEN) private category: CategoryMethod,
 
   ) { }
+
+
+  async getDishByComment(id: number): Promise<Dish | null> {
+
+    try {
+
+      const dish = await this.dishRepository.findOne({
+        where: {
+          comment: {
+            id
+          }
+        }, relations: ['comment']
+      })
+
+      if (!dish) throw new NotFoundException('Platillo no encontrado');
+
+      return dish;
+
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+
+      throw new InternalServerErrorException('Error al obtener el platillo');
+    }
+  }
+
+
+
+  async updateQuality(id: number, qualification: string): Promise<void> {
+    try {
+
+      await this.dishRepository.update(id, { qualification });
+
+    } catch {
+      throw new InternalServerErrorException('Error al actualizar la calificación');
+    }
+  }
+
+
 
   async exist(id: number): Promise<Dish | null> {
 
@@ -165,11 +203,13 @@ export class DishService implements IDish {
 
       if (!dish) throw new NotFoundException('Platillo no encontrado');
 
+
       return {
         statusCode: HttpStatus.OK,
         message: 'Platillo encontrado',
         data: dish
       }
+
     } catch (error) {
 
       if (error instanceof NotFoundException) throw error;
@@ -177,4 +217,7 @@ export class DishService implements IDish {
       throw new InternalServerErrorException('Error al obtener el platillo');
     }
   }
+
+
+
 }

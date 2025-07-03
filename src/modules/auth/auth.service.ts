@@ -61,7 +61,7 @@ export class AuthService {
 
       await this.user.create(save);
 
-      //GENERACION DE TOKENS
+
       const payload: Payload = { email: save.email, sub: save.uuid, rol: save.rol };
       const tokens = await this.generateTokens(payload);
 

@@ -30,26 +30,37 @@ export class GeneratePdfService {
       doc.fillColor('#0e0e0e').strokeColor('#0e0e0e');
 
 
-      doc.fontSize(15).text(`Order #${order.uuid}`, 100, 50, { align: 'center' });
+      doc.font('Helvetica-Bold').fontSize(18).text(`Order #${order.uuid}`, 100, 50,).moveDown(0.5);
 
       doc.fillColor('#0e0e0e').fontSize(16).text('Datos del usuario:').moveDown(0.2);
 
 
       doc.fillColor('#0e0e0e').fontSize(16).text(`Nombre: ${order.user.username}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Direccion: ${order.user.address}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Numero: ${order.user.number}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Piso: ${order.user.floor}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Contacto: ${order.user.contact}`).moveDown(0.2);
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Codigo postal: ${order.user.postal_code}`).moveDown(0.2);
+      doc.fillColor('#0e0e0e').fontSize(16).text(`Direccion: ${order.user.address ?? ''}`).moveDown(0.2);
+      doc.fillColor('#0e0e0e').fontSize(16).text(`Numero: ${order.user.number ?? ''}`).moveDown(0.2);
+      doc.fillColor('#0e0e0e').fontSize(16).text(`Contacto: ${order.user.contact ?? ''}`).moveDown(0.2);
 
-      doc.fillColor('#0e0e0e').fontSize(16).text('Productos:')
 
-      order.cart.items.forEach(item => {
-        doc.fillColor('#0e0e0e').text(`platillo: ${item.dish.name} C/A ${item.dish.price} - precio total: ${item.total} X${item.count}`).moveDown(0.2);
+      const dataDish = order.cart.items.map(item => {
+        return [`${item.dish.name}`, `${item.dish.price}`, `${item.total}`, `${item.count}`]
       });
 
 
-      doc.fillColor('#0e0e0e').fontSize(16).text(`Total: ${order.cart.total}`).moveDown(0.2);
+      doc.font('Helvetica-Bold').fillColor('#0e0e0e').fontSize(18).text('Detalles del pedido:').moveDown(0.2);
+
+      doc.table({
+        rowStyles: (i) => {
+          return i < 1
+            ? { border: [0, 0, 2, 0], borderColor: "black" }
+            : { border: [0, 0, 1, 0], borderColor: "#aaa" };
+        },
+        data: [
+          ["Nombre", "Precio", "Total", 'Cantidad'],
+          ...dataDish
+        ],
+      });
+
+      doc.font('Helvetica-Bold').fontSize(18).text(`Total: ${order.cart.total}`).moveDown(0.5);
 
       doc.end();
     })

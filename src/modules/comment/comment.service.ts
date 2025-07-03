@@ -1,4 +1,6 @@
-import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { DISH_TOKEN_SERVICES } from '@modules/dish/const/dish-token.const';
+import { IDish } from '@modules/dish/interface/dish.interface';
+import { HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/comment.dto';
@@ -10,6 +12,7 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment)
     private commentRepository: Repository<Comment>,
+    @Inject(DISH_TOKEN_SERVICES) private dish: IDish
   ) { }
 
 
@@ -17,9 +20,15 @@ export class CommentService {
 
     try {
 
-      const newComment = this.commentRepository.create(comment);
+      const newComment = this.commentRepository.create({
+        ...comment,
+        qualification: 5 / comment.qualification
+      });
 
-      await this.commentRepository.save(newComment);
+      const save = await this.commentRepository.save(newComment);
+
+
+      await this.calculateQuality(save);
 
       return {
         statusCode: HttpStatus.CREATED,
@@ -56,6 +65,25 @@ export class CommentService {
 
       throw new InternalServerErrorException('Error al obtener el comentario');
     }
+  }
+
+  private async calculateQuality(comment: Comment) {
+
+    try {
+
+      const dish = await this.dish.getDishByComment(comment.dish.id);
+
+      if (!dish) throw new NotFoundException('Platillo no encontrado');
+
+      const userQualifications = dish.comment.map(comment => comment.qualification);
+      const totalQualification = userQualifications.reduce((a, b) => a + b, 0) / userQualifications.length;
+
+      await this.dish.updateQuality(dish.id, `${totalQualification}`);
+
+    } catch {
+      throw new InternalServerErrorException('Error al actualizar la calificación');
+    }
+
   }
 
 }
