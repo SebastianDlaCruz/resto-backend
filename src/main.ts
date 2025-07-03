@@ -13,6 +13,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+
   app.useGlobalInterceptors(
     new ResponseSuccessInterceptor()
   );

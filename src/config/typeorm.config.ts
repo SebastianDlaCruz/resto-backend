@@ -12,6 +12,6 @@ export const typeOrmConfig = (configService: ConfigService): TypeOrmModuleOption
   synchronize: configService.get<string>('NODE_ENV') === 'development',
   autoLoadEntities: true,
   dropSchema: configService.get<string>('NODE_ENV') === 'development',
-  logging: configService.get<string>('NODE_ENV') === 'development',
+  logging: true /* configService.get<string>('NODE_ENV') === 'development' */,
 });
 
